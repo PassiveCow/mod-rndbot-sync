@@ -153,7 +153,7 @@ static bool IsPlayerRandomBot(Player* player)
 // so this never collides with that declaration again.
 static bool IsHumanPlayer(Player* player)
 {
-    return player && player->GetSession() && !player->GetSession()->IsBot();
+    return player && player->GetSession() && !player->GetSession()->IsHeadless();
 }
 
 // ---- Exclusions --------------------------------------------------------------
