@@ -305,14 +305,14 @@ static void EvaluateDeathKnightGate()
 
     if (g_DkUnlocked)
     {
-        sPlayerbotAIConfig.disableDeathKnightLogin = false;
+        sPlayerbotAIConfig.DisableDeathKnightLogin = false;
         return;
     }
 
     std::string accountIds;
     if (!GetRealPlayerAccountIds(accountIds))
     {
-        sPlayerbotAIConfig.disableDeathKnightLogin = true;
+        sPlayerbotAIConfig.DisableDeathKnightLogin = true;
         return;
     }
 
@@ -326,7 +326,7 @@ static void EvaluateDeathKnightGate()
     if (result)
     {
         g_DkUnlocked = true;
-        sPlayerbotAIConfig.disableDeathKnightLogin = false;
+        sPlayerbotAIConfig.DisableDeathKnightLogin = false;
         if (g_FullDebug || g_LiteDebug)
         {
             LOG_INFO("server.loading", "[RndBotSync] DK gate met (state {}); Death Knight bots unlocked.", g_DkRequiredState);
@@ -334,7 +334,7 @@ static void EvaluateDeathKnightGate()
     }
     else
     {
-        sPlayerbotAIConfig.disableDeathKnightLogin = true;
+        sPlayerbotAIConfig.DisableDeathKnightLogin = true;
         if (g_FullDebug)
         {
             LOG_INFO("server.loading", "[RndBotSync] DK gate not met (state {}); Death Knight bots blocked.", g_DkRequiredState);
@@ -452,7 +452,7 @@ static void UpdateGlobalGearCap(Player* targetPlayer)
 {
     if (!g_IlvlSyncEnabled || !targetPlayer)
     {
-        sPlayerbotAIConfig.randomGearScoreLimit = g_OriginalGearScoreLimit;
+        sPlayerbotAIConfig.RandomGearScoreLimit = g_OriginalGearScoreLimit;
         return;
     }
 
@@ -461,7 +461,7 @@ static void UpdateGlobalGearCap(Player* targetPlayer)
     {
         // Player owns nothing equippable: don't set 0 (mod-playerbots treats 0 as
         // "unlimited"); leave the configured cap in place.
-        sPlayerbotAIConfig.randomGearScoreLimit = g_OriginalGearScoreLimit;
+        sPlayerbotAIConfig.RandomGearScoreLimit = g_OriginalGearScoreLimit;
         return;
     }
 
@@ -472,12 +472,12 @@ static void UpdateGlobalGearCap(Player* targetPlayer)
     // what a bot at the level ceiling needs; once the player outgears the
     // leveling curve (dungeons, raids) their own ilvl takes over.
     int32 const capFloor = static_cast<int32>(targetPlayer->GetLevel() + g_TargetBand) + 5;
-    sPlayerbotAIConfig.randomGearScoreLimit = std::max<int32>(capFloor, static_cast<int32>(ilvl));
+    sPlayerbotAIConfig.RandomGearScoreLimit = std::max<int32>(capFloor, static_cast<int32>(ilvl));
 
     if (g_FullDebug || g_LiteDebug)
     {
         LOG_INFO("server.loading", "[RndBotSync] Gear cap set to item level {} (player '{}').",
-                 sPlayerbotAIConfig.randomGearScoreLimit, targetPlayer->GetName());
+                 sPlayerbotAIConfig.RandomGearScoreLimit, targetPlayer->GetName());
     }
 }
 
@@ -554,7 +554,7 @@ static bool SetBotLevelInRange(Player* bot, int lower, int upper)
 
     // Known mod-playerbots quirk: re-init talents when rolling to max level with
     // equip/spec persistence enabled.
-    if (newLevel == g_RandomBotMaxLevel && sPlayerbotAIConfig.equipAndSpecPersistence)
+    if (newLevel == g_RandomBotMaxLevel && sPlayerbotAIConfig.EquipAndSpecPersistence)
     {
         PlayerbotFactory talentFactory(bot, newLevel);
         talentFactory.InitTalentsTree(false, true, true);
@@ -928,7 +928,7 @@ public:
         }
 
         handler->PSendSysMessage("  IlvlSync: {}, gear cap: {}, target best item level: {}.",
-                                 g_IlvlSyncEnabled, sPlayerbotAIConfig.randomGearScoreLimit,
+                                 g_IlvlSyncEnabled, sPlayerbotAIConfig.RandomGearScoreLimit,
                                  targetPlayer ? GetBestOwnedItemLevel(targetPlayer) : 0);
         handler->PSendSysMessage("  DK gate: {}, {} (RequiredState {}).",
                                  g_DkProgressionEnabled, g_DkUnlocked ? "unlocked" : "locked", g_DkRequiredState);
